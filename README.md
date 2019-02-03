@@ -18,7 +18,7 @@ allprojects {
 
 ```gradle
 dependencies {
-        implementation 'com.github.hvatum:SimpleGauges:Tag'
+        implementation 'com.github.hvatum:SimpleGauges:0.2'
 }
 ```
 
