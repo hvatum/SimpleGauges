@@ -31,6 +31,7 @@
         custom:labelTextSize="96"
         custom:labelPosFromBottom="366dp"
         custom:arcSweep="290"
+        custom:maxValue="250"
         />
 
 </android.support.constraint.ConstraintLayout>

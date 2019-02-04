@@ -8,8 +8,14 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.Pair;
+
+import java.util.List;
 
 /**
  * Created by hvatum on 01.02.19.
@@ -18,6 +24,7 @@ import android.util.AttributeSet;
 public class AnalogGauge extends BaseGauge {
 
 
+    private boolean ticksAtBackgroundColorChange = false;
     Rect bounds = new Rect();
     private float value = 80;
     private float maxValue = 100;
@@ -29,12 +36,14 @@ public class AnalogGauge extends BaseGauge {
     private int textSize = 48;
     private String unit = null;
     private float labelPos = 48f;
+    private int numTicks = 6;
+    private int tickLength = 40;
+    private List<Pair<Float, Integer>> backgroundColors;
+    private boolean drawTicks = true;
 
     public AnalogGauge(Context context) {
         super(context);
         initComponents();
-
-
     }
 
 
@@ -51,16 +60,28 @@ public class AnalogGauge extends BaseGauge {
             setDrawValueText(a.getBoolean(R.styleable.AnalogGauge_showLabel, false));
             setLabelTextSize(a.getInteger(R.styleable.AnalogGauge_labelTextSize, 48));
             setLabelPostFromBottom(a.getDimension(R.styleable.AnalogGauge_labelPosFromBottom, 48f));
-
             setUnit(a.getString(R.styleable.AnalogGauge_unit));
             setValue(a.getInteger(R.styleable.AnalogGauge_value, 30));
             setMaxValue(a.getInteger(R.styleable.AnalogGauge_maxValue, 100));
             setArcDegrees(a.getInteger(R.styleable.AnalogGauge_arcSweep, 300));
-
-
+            setNumTicks(a.getInteger(R.styleable.AnalogGauge_numTicks, 6));
+            setTickLength(a.getInteger(R.styleable.AnalogGauge_tickLength, 40));
+            setTicksAtBackgroundColorChange(a.getBoolean(R.styleable.AnalogGauge_ticksAtBackgroundColorChange, false));
         } finally {
             a.recycle();
         }
+    }
+
+    public void setNumTicks(int numTicks) {
+        this.numTicks = numTicks;
+    }
+
+    public void setTickLength(int tickLength) {
+        this.tickLength = tickLength;
+    }
+
+    public void setTicksAtBackgroundColorChange(boolean ticksAtBackgroundColorChange) {
+        this.ticksAtBackgroundColorChange = ticksAtBackgroundColorChange;
     }
 
     public void setLabelTextSize(int textSize) {
@@ -73,7 +94,9 @@ public class AnalogGauge extends BaseGauge {
 
     private Paint getValuePaint() {
         Paint p = getCommonPaint();
-        p.setColor(Color.BLACK);
+        p.setColor(Color.blue(204));
+        p.setStrokeWidth(strokeWidth/1.4f);
+        p.setAlpha(190);
         return p;
     }
 
@@ -82,6 +105,8 @@ public class AnalogGauge extends BaseGauge {
         p.setStyle(Paint.Style.FILL);
         p.setTextAlign(Paint.Align.CENTER);
         p.setTextSize(textSize);
+        p.setStyle(Paint.Style.FILL);
+        p.setStrokeWidth(4.0f);
         return p;
     }
 
@@ -158,8 +183,43 @@ public class AnalogGauge extends BaseGauge {
 
         RectF gaugeBounds = getGaugeRect(bounds);
         Path backgroundPath = new Path();
-        backgroundPath.addArc(new RectF(gaugeBounds), gaugeStart, gaugeSweep);
-        canvas.drawPath(backgroundPath, getBackgroundPaint());
+        Paint backgroundPaint = getBackgroundPaint();
+
+            backgroundPath.addArc(new RectF(gaugeBounds), gaugeStart, gaugeSweep);
+            canvas.drawPath(backgroundPath, backgroundPaint);
+        if (backgroundColors != null) {
+            float currentSweep = 0.0f;
+            for (Pair<Float, Integer> floatColorPair : backgroundColors) {
+                float toSweep = gaugeSweep * (floatColorPair.first / maxValue);
+                float sweepLength = toSweep - currentSweep;
+                backgroundPath.reset();
+                backgroundPath.addArc(new RectF(gaugeBounds), gaugeStart + currentSweep, sweepLength);
+                currentSweep += sweepLength;
+                int c = floatColorPair.second;
+                backgroundPaint.setColor(c);
+                backgroundPaint.setStrokeCap(Paint.Cap.BUTT);
+                canvas.drawPath(backgroundPath, backgroundPaint);
+                Log.i("Sweep", "Sweep from " + currentSweep + " to " + toSweep + " gets color " + floatColorPair.second);
+            }
+        }
+
+        if (drawTicks && numTicks > 0) {
+            float centerX = gaugeBounds.centerX();
+            float centerY = gaugeBounds.centerY();
+
+
+
+            float radius = gaugeBounds.right - gaugeBounds.centerX();
+
+            int text_margin = tickLength + 60;
+            for (int i = 0; i < numTicks; i++) {
+                float angle = 90 + gaugeStart + i * (gaugeSweep/(numTicks-1));
+                double sin = Math.sin(Math.toRadians(angle));
+                double cos = Math.cos(Math.toRadians(angle));
+                canvas.drawLine((float) (centerX + sin * (radius - tickLength)), (float) (centerY - cos * (radius - tickLength)), (float) (centerX + sin * radius), (float) (centerY - cos * radius), getLabelTextPaint());
+                canvas.drawText(String.valueOf((int)(i*maxValue/(numTicks-1))), (float) (centerX + sin * (radius - text_margin)), (float) (centerY - cos * (radius - text_margin)), getLabelTextPaint());
+            }
+        }
 
         Path valuePath = new Path();
         float rValue = gaugeSweep * (value / maxValue);
@@ -178,6 +238,15 @@ public class AnalogGauge extends BaseGauge {
         canvas.restore();
     }
 
+    private Paint getLabelTextPaint() {
+        Paint p = getTextPaint();
+        p.setTextSize(40);
+        return p;
+    }
+
+    public void setBackgroundColors(List<Pair<Float, Integer>> backgroundColors) {
+        this.backgroundColors = backgroundColors;
+    }
 
     @NonNull
     private RectF getGaugeRect(Rect bounds) {
