@@ -16,7 +16,7 @@ import android.util.AttributeSet;
 
 public class AnalogGauge extends BaseGauge {
 
-    Rect bounds;
+    Rect bounds = new Rect();
     private float value = 80;
     private float maxValue = 100;
     private int margin = 240;
