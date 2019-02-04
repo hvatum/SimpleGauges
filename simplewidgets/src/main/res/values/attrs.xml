@@ -1,7 +1,8 @@
 <resources>
     <declare-styleable name="AnalogGauge">
-        <attr name="showText" format="boolean" />
+        <attr name="showLabel" format="boolean" />
         <attr name="labelTextSize" format="integer" />
+        <attr name="labelPosFromBottom" format="dimension" />
         <attr name="unit" format="string" />
         <attr name="maxValue" format="integer" />
         <attr name="value" format="integer" />

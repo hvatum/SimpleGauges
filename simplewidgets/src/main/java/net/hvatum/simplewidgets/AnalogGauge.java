@@ -28,6 +28,7 @@ public class AnalogGauge extends BaseGauge {
     private boolean drawText = false;
     private int textSize = 48;
     private String unit = null;
+    private float labelPos = 48f;
 
     public AnalogGauge(Context context) {
         super(context);
@@ -47,13 +48,15 @@ public class AnalogGauge extends BaseGauge {
                 0, 0);
 
         try {
-            setDrawValueText(a.getBoolean(R.styleable.AnalogGauge_showText, false));
+            setDrawValueText(a.getBoolean(R.styleable.AnalogGauge_showLabel, false));
             setLabelTextSize(a.getInteger(R.styleable.AnalogGauge_labelTextSize, 48));
+            setLabelPostFromBottom(a.getDimension(R.styleable.AnalogGauge_labelPosFromBottom, 48f));
 
             setUnit(a.getString(R.styleable.AnalogGauge_unit));
             setValue(a.getInteger(R.styleable.AnalogGauge_value, 30));
             setMaxValue(a.getInteger(R.styleable.AnalogGauge_maxValue, 100));
             setArcDegrees(a.getInteger(R.styleable.AnalogGauge_arcSweep, 300));
+
 
         } finally {
             a.recycle();
@@ -62,6 +65,10 @@ public class AnalogGauge extends BaseGauge {
 
     public void setLabelTextSize(int textSize) {
         this.textSize = textSize;
+    }
+
+    public void setLabelPostFromBottom(float labelPos) {
+        this.labelPos = labelPos;
     }
 
     private Paint getValuePaint() {
@@ -163,7 +170,7 @@ public class AnalogGauge extends BaseGauge {
 
         if (drawText) {
             if (unit != null) {
-                canvas.drawText(value + " " + unit, gaugeBounds.centerX(), gaugeBounds.bottom - margin, getTextPaint());
+                canvas.drawText(value + " " + unit, gaugeBounds.centerX(), gaugeBounds.bottom - labelPos, getTextPaint());
             }
         }
 
