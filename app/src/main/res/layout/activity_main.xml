@@ -30,7 +30,7 @@
         custom:unit="Pulse"
         custom:labelTextSize="96"
         custom:labelPosFromBottom="366dp"
-        custom:arcSweep="180"
+        custom:arcSweep="290"
         />
 
 </android.support.constraint.ConstraintLayout>

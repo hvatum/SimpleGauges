@@ -103,6 +103,7 @@ public class AnalogGauge extends BaseGauge {
         p.setStrokeWidth(strokeWidth);
         p.setStrokeJoin(Paint.Join.ROUND);
         p.setStrokeCap(Paint.Cap.ROUND);
+        p.setAntiAlias(true);
         return p;
     }
 
