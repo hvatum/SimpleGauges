@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         AnalogGauge analogGauge = MainActivity.this.findViewById(R.id.analoggauge);
-        analogGauge.setDrawValueText(true);
-        analogGauge.setUnit("pulse");
+        //analogGauge.setDrawValueText(true);
+        //analogGauge.setUnit("pulse");
 
         BarGauge barGauge = MainActivity.this.findViewById(R.id.bargauge);
 

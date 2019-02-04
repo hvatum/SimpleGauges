@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="AnalogGauge">
+        <attr name="showText" format="boolean" />
+        <attr name="labelTextSize" format="integer" />
+        <attr name="unit" format="string" />
+        <attr name="maxValue" format="integer" />
+        <attr name="value" format="integer" />
+        <attr name="arcSweep" format="integer" />
+    </declare-styleable>
+</resources>

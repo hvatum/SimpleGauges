@@ -1,6 +1,7 @@
 package net.hvatum.simplewidgets;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +17,7 @@ import android.util.AttributeSet;
 
 public class AnalogGauge extends BaseGauge {
 
+
     Rect bounds = new Rect();
     private float value = 80;
     private float maxValue = 100;
@@ -24,11 +26,14 @@ public class AnalogGauge extends BaseGauge {
     private float gaugeStart;
     private float gaugeSweep;
     private boolean drawText = false;
+    private int textSize = 48;
     private String unit = null;
 
     public AnalogGauge(Context context) {
         super(context);
         initComponents();
+
+
     }
 
 
@@ -36,6 +41,27 @@ public class AnalogGauge extends BaseGauge {
         super(context, attributeSet);
         initComponents();
 
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attributeSet,
+                R.styleable.AnalogGauge,
+                0, 0);
+
+        try {
+            setDrawValueText(a.getBoolean(R.styleable.AnalogGauge_showText, false));
+            setLabelTextSize(a.getInteger(R.styleable.AnalogGauge_labelTextSize, 48));
+
+            setUnit(a.getString(R.styleable.AnalogGauge_unit));
+            setValue(a.getInteger(R.styleable.AnalogGauge_value, 30));
+            setMaxValue(a.getInteger(R.styleable.AnalogGauge_maxValue, 100));
+            setArcDegrees(a.getInteger(R.styleable.AnalogGauge_arcSweep, 300));
+
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public void setLabelTextSize(int textSize) {
+        this.textSize = textSize;
     }
 
     private Paint getValuePaint() {
@@ -48,7 +74,7 @@ public class AnalogGauge extends BaseGauge {
         Paint p = getCommonPaint();
         p.setStyle(Paint.Style.FILL);
         p.setTextAlign(Paint.Align.CENTER);
-        p.setTextSize(96.0f);
+        p.setTextSize(textSize);
         return p;
     }
 
