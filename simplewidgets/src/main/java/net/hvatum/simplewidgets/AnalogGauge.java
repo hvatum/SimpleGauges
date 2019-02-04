@@ -19,7 +19,7 @@ public class AnalogGauge extends BaseGauge {
     Rect bounds = new Rect();
     private float value = 80;
     private float maxValue = 100;
-    private int margin = 240;
+    private int margin = 40;
     private float strokeWidth = 50.0f;
     private float gaugeStart;
     private float gaugeSweep;
@@ -35,6 +35,7 @@ public class AnalogGauge extends BaseGauge {
     public AnalogGauge(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         initComponents();
+
     }
 
     private Paint getValuePaint() {
@@ -81,6 +82,10 @@ public class AnalogGauge extends BaseGauge {
         invalidate();
     }
 
+    public void setMargin(int margin) {
+        this.margin = margin;
+    }
+
     public void setUnit(String unit) {
         this.unit = unit;
     }
@@ -124,8 +129,8 @@ public class AnalogGauge extends BaseGauge {
 
         Path valuePath = new Path();
         float rValue = gaugeSweep * (value / maxValue);
-        if (rValue > maxValue) {
-            rValue = maxValue;
+        if (rValue > gaugeSweep) {
+            rValue = gaugeSweep;
         }
         valuePath.addArc(new RectF(gaugeBounds), gaugeStart, rValue);
         canvas.drawPath(valuePath, getValuePaint());
