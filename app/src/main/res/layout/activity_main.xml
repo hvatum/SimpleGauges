@@ -10,28 +10,45 @@
     <net.hvatum.simplewidgets.BarGauge
         android:id="@+id/bargauge"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
-        />
+        app:valueStrokeCaps="butt"
+        custom:maxValue="250" />
 
     <net.hvatum.simplewidgets.AnalogGauge
-        android:id="@+id/analoggauge"
+        android:id="@+id/analoggauge1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/analoggauge2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bargauge"
+        app:valueStrokeCaps="butt"
+        custom:arcSweep="290"
+        custom:labelPosFromBottom="386dp"
+        custom:labelTextSize="36"
+        custom:maxValue="250"
+        custom:showLabel="true"
+        custom:unit="Pulse" />
+
+    <net.hvatum.simplewidgets.AnalogGauge
+        android:id="@+id/analoggauge2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/analoggauge1"
         app:layout_constraintTop_toBottomOf="@id/bargauge"
-        custom:showLabel="true"
-        custom:unit="Pulse"
-        custom:labelTextSize="96"
-        custom:labelPosFromBottom="366dp"
+        app:valueStrokeCaps="round"
         custom:arcSweep="290"
+        custom:labelPosFromBottom="56dp"
+        custom:labelTextSize="36"
         custom:maxValue="250"
-        />
+        custom:showLabel="true"
+        custom:unit="Pulse" />
 
 </android.support.constraint.ConstraintLayout>

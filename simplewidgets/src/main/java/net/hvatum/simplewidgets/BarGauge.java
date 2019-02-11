@@ -13,23 +13,12 @@ import android.util.AttributeSet;
 
 public class BarGauge extends BaseGauge {
 
-    private int value = 80;
-    private int maxValue = 100;
-
     public BarGauge(Context context) {
         super(context);
     }
 
     public BarGauge(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public void setMaxValue(int maxValue) {
-        this.maxValue = maxValue;
     }
 
     @Override
@@ -43,20 +32,28 @@ public class BarGauge extends BaseGauge {
         int minh = MeasureSpec.getSize(w) - 100 + getPaddingBottom() + getPaddingTop();
         int h = resolveSizeAndState(MeasureSpec.getSize(w) - 100, heightMeasureSpec, 0);
 
-        setMeasuredDimension(100, 20);
+        setMeasuredDimension(0, IntegerMax((int)strokeWidth*2,20));
+    }
+
+    private int IntegerMax(int i, int i1) {
+        return i < i1 ? i1 : i;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Rect bounds = canvas.getClipBounds();
-        Paint p = new Paint();
-        p.setStyle(Paint.Style.FILL_AND_STROKE);
-        p.setColor(Color.GRAY);
-        p.setStrokeJoin(Paint.Join.ROUND);
-        canvas.drawRect(bounds, p);
-        p.setColor(Color.BLACK);
-        canvas.drawRect(new Rect(bounds.left, bounds.top, bounds.left + (int) ((value / (double) maxValue) * (bounds.right - bounds.left)), bounds.bottom), p);
-        canvas.drawText("test", bounds.centerX(), bounds.centerY(), p);
+        Paint p = getBackgroundPaint();
+        canvas.drawLine(bounds.left + margin, bounds.centerY(),bounds.right - margin, bounds.centerY(), p);
+        p = getValuePaint();
+        //canvas.drawLine((float) (centerX + sin * (radius - tickLength)), (float) (centerY - cos * (radius - tickLength)), (float) (centerX + sin * radius), (float) (centerY - cos * radius), getLabelTextPaint());
+        canvas.drawLine(bounds.left + margin, bounds.centerY(),bounds.left + (int) ((value / (double) maxValue) * (bounds.right - bounds.left)) - margin, bounds.centerY(), p);
+        if (drawText) {
+            if (unit != null && !unit.isEmpty()) {
+                canvas.drawText(value + " " + unit, bounds.centerX(), bounds.centerY(), p);
+            } else {
+                canvas.drawText(Float.toString(value), bounds.centerX(), bounds.centerY(), p);
+            }
+        }
     }
 }

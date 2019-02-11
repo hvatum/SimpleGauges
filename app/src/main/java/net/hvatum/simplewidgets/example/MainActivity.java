@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AnalogGauge analogGauge = MainActivity.this.findViewById(R.id.analoggauge);
+        AnalogGauge analogGauge1 = MainActivity.this.findViewById(R.id.analoggauge1);
         //analogGauge.setDrawValueText(true);
         //analogGauge.setUnit("pulse");
         List<Pair<Float, Integer>> l = new ArrayList<>();
@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         l.add(new Pair<>(90.0f, Color.GREEN));
         l.add(new Pair<>(140.0f, Color.YELLOW));
         l.add(new Pair<>(250.0f, Color.RED));
-        analogGauge.setBackgroundColors(l);
+        analogGauge1.setBackgroundColors(l);
+
+        AnalogGauge analogGauge2 = MainActivity.this.findViewById(R.id.analoggauge2);
 
         BarGauge barGauge = MainActivity.this.findViewById(R.id.bargauge);
 
@@ -43,8 +45,12 @@ public class MainActivity extends AppCompatActivity {
             while (true) {
                 handler.post(() -> {
                     int value = r.nextInt(250);
-                    analogGauge.setValue(value);
+                    analogGauge1.setValue(value);
+                    analogGauge1.setValueColors(255-value, value, 0);
+                    analogGauge2.setValue(value);
+                    analogGauge2.setValueColors(255-value, 0, value);
                     barGauge.setValue(value);
+                    barGauge.setValueColors(value, 255-value, 0);
                 });
                 try {
                     Thread.sleep(1000);

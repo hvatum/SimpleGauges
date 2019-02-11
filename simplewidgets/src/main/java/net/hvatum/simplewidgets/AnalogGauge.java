@@ -24,31 +24,9 @@ import java.util.List;
 public class AnalogGauge extends BaseGauge {
 
 
-    private boolean ticksAtBackgroundColorChange = false;
-    Rect bounds = new Rect();
-    private float value = 80;
-    private float maxValue = 100;
-    private int margin = 40;
-    private float strokeWidth = 50.0f;
+
     private float gaugeStart;
     private float gaugeSweep;
-    private boolean drawText = false;
-    private int textSize = 48;
-    private String unit = null;
-    private float labelPos = 48f;
-    private int numTicks = 6;
-    private int tickLength = 40;
-    private List<Pair<Float, Integer>> backgroundColors;
-    private boolean drawTicks = true;
-    private int valueColor = Color.blue(204);
-
-    private Paint p = new Paint();
-    private Paint.Cap strokeCap = Paint.Cap.ROUND;
-
-    public static final int SQUARE = 0;
-    public static final int ROUND = 1;
-    public static final int BUTT = 2;
-
 
     public AnalogGauge(Context context) {
         super(context);
@@ -66,129 +44,24 @@ public class AnalogGauge extends BaseGauge {
                 0, 0);
 
         try {
-            setDrawValueText(a.getBoolean(R.styleable.AnalogGauge_showLabel, false));
-            setLabelTextSize(a.getInteger(R.styleable.AnalogGauge_labelTextSize, 48));
-            setLabelPosFromBottom(a.getDimension(R.styleable.AnalogGauge_labelPosFromBottom, 48f));
-            setUnit(a.getString(R.styleable.AnalogGauge_unit));
-            setValue(a.getInteger(R.styleable.AnalogGauge_value, 30));
-            setMaxValue(a.getInteger(R.styleable.AnalogGauge_maxValue, 100));
-            setArcDegrees(a.getInteger(R.styleable.AnalogGauge_arcSweep, 300));
-            setNumTicks(a.getInteger(R.styleable.AnalogGauge_numTicks, 6));
-            setTickLength(a.getInteger(R.styleable.AnalogGauge_tickLength, 40));
-            setTicksAtBackgroundColorChange(a.getBoolean(R.styleable.AnalogGauge_ticksAtBackgroundColorChange, false));
-            setValueStrokeCaps(a.getInt(R.styleable.AnalogGauge_valueStrokeCaps, ROUND));
-            setValueColors(a.getColor(R.styleable.AnalogGauge_valueColor, Color.blue(204)));
+            setArcDegrees(a.getFloat(R.styleable.AnalogGauge_arcSweep, 30));
         } finally {
             a.recycle();
         }
     }
 
-    public void setNumTicks(int numTicks) {
-        this.numTicks = numTicks;
-    }
-
-    public void setTickLength(int tickLength) {
-        this.tickLength = tickLength;
-    }
-
-    public void setTicksAtBackgroundColorChange(boolean ticksAtBackgroundColorChange) {
-        this.ticksAtBackgroundColorChange = ticksAtBackgroundColorChange;
-    }
-
-    public void setValueStrokeCaps(int strokeCap) {
-        switch (strokeCap) {
-            case SQUARE:
-                setValueStrokeCaps(Paint.Cap.SQUARE);
-                break;
-            case BUTT:
-                setValueStrokeCaps(Paint.Cap.BUTT);
-                break;
-            case ROUND:
-                setValueStrokeCaps(Paint.Cap.ROUND);
-                break;
-            default:
-                setValueStrokeCaps(Paint.Cap.BUTT);
-                break;
-        }
-    }
-
-    public void setValueStrokeCaps(Paint.Cap strokeCap) {
-        this.strokeCap = strokeCap;
-    }
-
-    public void setLabelTextSize(int textSize) {
-        this.textSize = textSize;
-    }
-
-    public void setLabelPosFromBottom(float labelPos) {
-        this.labelPos = labelPos;
-    }
-
-    private Paint getValuePaint() {
-        Paint p = getCommonPaint();
-        p.setColor(valueColor);
-        p.setStrokeWidth(strokeWidth/1.4f);
-        p.setAlpha(190);
-        p.setStrokeCap(strokeCap);
-        return p;
-    }
-
-    private Paint getTextPaint() {
-        Paint p = getCommonPaint();
-        p.setStyle(Paint.Style.FILL);
-        p.setTextAlign(Paint.Align.CENTER);
-        p.setTextSize(textSize);
-        p.setStyle(Paint.Style.FILL);
-        p.setStrokeWidth(4.0f);
-        return p;
-    }
-
-    private Paint getBackgroundPaint() {
-        Paint p = getCommonPaint();
-        p.setColor(Color.GRAY);
-        p.setAlpha(30);
-        return p;
-    }
 
     public void setArcDegrees(float degrees) {
         this.gaugeStart = 90.0f + (360.0f - degrees) / 2;
         this.gaugeSweep = degrees;
     }
 
-    private Paint getCommonPaint() {
-        p.reset();
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(strokeWidth);
-        p.setStrokeJoin(Paint.Join.ROUND);
-        p.setStrokeCap(Paint.Cap.ROUND);
-        p.setAntiAlias(true);
-        return p;
-    }
-
     private void initComponents() {
         setArcDegrees(300.0f);
     }
 
-    public void setValue(float value) {
-        this.value = value;
-        invalidate();
-    }
 
-    public void setMargin(int margin) {
-        this.margin = margin;
-    }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public void setMaxValue(int maxValue) {
-        this.maxValue = maxValue;
-    }
-
-    public void setDrawValueText(boolean drawText) {
-        this.drawText = drawText;
-    }
 
     /*
         @Override
@@ -263,32 +136,12 @@ public class AnalogGauge extends BaseGauge {
         if (drawText) {
             if (unit != null) {
                 canvas.drawText(value + " " + unit, gaugeBounds.centerX(), gaugeBounds.bottom - labelPos, getTextPaint());
+            } else {
+                canvas.drawText(Float.toString(value), gaugeBounds.centerX(), gaugeBounds.bottom - labelPos, getTextPaint());
             }
         }
 
         canvas.restore();
-    }
-
-    private Paint getLabelTextPaint() {
-        Paint p = getTextPaint();
-        p.setTextSize(40);
-        return p;
-    }
-
-    public void setBackgroundColors(List<Pair<Float, Integer>> backgroundColors) {
-        this.backgroundColors = backgroundColors;
-    }
-
-    public void setValueColors(int r, int b, int g) {
-        setValueColors(255, r, b, g);
-    }
-
-    public void setValueColors(int a, int r, int b, int g) {
-        setValueColors(colorFromArgb(a, r, b, g));
-    }
-
-    public void setValueColors(int valueColor) {
-        this.valueColor= valueColor;
     }
 
     @NonNull
