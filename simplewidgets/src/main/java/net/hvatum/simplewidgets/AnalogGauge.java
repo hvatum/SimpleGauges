@@ -41,6 +41,13 @@ public class AnalogGauge extends BaseGauge {
     private List<Pair<Float, Integer>> backgroundColors;
     private boolean drawTicks = true;
 
+    private Paint p = new Paint();
+    private Paint.Cap strokeCap = Paint.Cap.ROUND;
+
+    public static final int SQUARE = 0;
+    public static final int ROUND = 1;
+    public static final int BUTT = 2;
+
     public AnalogGauge(Context context) {
         super(context);
         initComponents();
@@ -67,6 +74,7 @@ public class AnalogGauge extends BaseGauge {
             setNumTicks(a.getInteger(R.styleable.AnalogGauge_numTicks, 6));
             setTickLength(a.getInteger(R.styleable.AnalogGauge_tickLength, 40));
             setTicksAtBackgroundColorChange(a.getBoolean(R.styleable.AnalogGauge_ticksAtBackgroundColorChange, false));
+            setValueStrokeCaps(a.getInt(R.styleable.AnalogGauge_valueStrokeCaps, ROUND));
         } finally {
             a.recycle();
         }
@@ -84,6 +92,27 @@ public class AnalogGauge extends BaseGauge {
         this.ticksAtBackgroundColorChange = ticksAtBackgroundColorChange;
     }
 
+    public void setValueStrokeCaps(int strokeCap) {
+        switch (strokeCap) {
+            case SQUARE:
+                setValueStrokeCaps(Paint.Cap.SQUARE);
+                break;
+            case BUTT:
+                setValueStrokeCaps(Paint.Cap.BUTT);
+                break;
+            case ROUND:
+                setValueStrokeCaps(Paint.Cap.ROUND);
+                break;
+            default:
+                setValueStrokeCaps(Paint.Cap.BUTT);
+                break;
+        }
+    }
+
+    public void setValueStrokeCaps(Paint.Cap strokeCap) {
+        this.strokeCap = strokeCap;
+    }
+
     public void setLabelTextSize(int textSize) {
         this.textSize = textSize;
     }
@@ -97,6 +126,7 @@ public class AnalogGauge extends BaseGauge {
         p.setColor(Color.blue(204));
         p.setStrokeWidth(strokeWidth/1.4f);
         p.setAlpha(190);
+        p.setStrokeCap(strokeCap);
         return p;
     }
 
@@ -123,7 +153,7 @@ public class AnalogGauge extends BaseGauge {
     }
 
     private Paint getCommonPaint() {
-        Paint p = new Paint();
+        p.reset();
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(strokeWidth);
         p.setStrokeJoin(Paint.Join.ROUND);
@@ -136,7 +166,7 @@ public class AnalogGauge extends BaseGauge {
         setArcDegrees(300.0f);
     }
 
-    public void setValue(int value) {
+    public void setValue(float value) {
         this.value = value;
         invalidate();
     }
@@ -185,8 +215,8 @@ public class AnalogGauge extends BaseGauge {
         Path backgroundPath = new Path();
         Paint backgroundPaint = getBackgroundPaint();
 
-            backgroundPath.addArc(new RectF(gaugeBounds), gaugeStart, gaugeSweep);
-            canvas.drawPath(backgroundPath, backgroundPaint);
+        backgroundPath.addArc(new RectF(gaugeBounds), gaugeStart, gaugeSweep);
+        canvas.drawPath(backgroundPath, backgroundPaint);
         if (backgroundColors != null) {
             float currentSweep = 0.0f;
             for (Pair<Float, Integer> floatColorPair : backgroundColors) {
@@ -199,7 +229,6 @@ public class AnalogGauge extends BaseGauge {
                 backgroundPaint.setColor(c);
                 backgroundPaint.setStrokeCap(Paint.Cap.BUTT);
                 canvas.drawPath(backgroundPath, backgroundPaint);
-                Log.i("Sweep", "Sweep from " + currentSweep + " to " + toSweep + " gets color " + floatColorPair.second);
             }
         }
 
@@ -208,16 +237,15 @@ public class AnalogGauge extends BaseGauge {
             float centerY = gaugeBounds.centerY();
 
 
-
             float radius = gaugeBounds.right - gaugeBounds.centerX();
 
             int text_margin = tickLength + 60;
             for (int i = 0; i < numTicks; i++) {
-                float angle = 90 + gaugeStart + i * (gaugeSweep/(numTicks-1));
+                float angle = 90 + gaugeStart + i * (gaugeSweep / (numTicks - 1));
                 double sin = Math.sin(Math.toRadians(angle));
                 double cos = Math.cos(Math.toRadians(angle));
                 canvas.drawLine((float) (centerX + sin * (radius - tickLength)), (float) (centerY - cos * (radius - tickLength)), (float) (centerX + sin * radius), (float) (centerY - cos * radius), getLabelTextPaint());
-                canvas.drawText(String.valueOf((int)(i*maxValue/(numTicks-1))), (float) (centerX + sin * (radius - text_margin)), (float) (centerY - cos * (radius - text_margin)), getLabelTextPaint());
+                canvas.drawText(String.valueOf((int) (i * maxValue / (numTicks - 1))), (float) (centerX + sin * (radius - text_margin)), (float) (centerY - cos * (radius - text_margin)), getLabelTextPaint());
             }
         }
 

@@ -5,8 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/SimpleGauges.iml" filepath="$PROJECT_DIR$/.idea/SimpleGauges.iml" />
       <module fileurl="file://$PROJECT_DIR$/SimpleWidgets.iml" filepath="$PROJECT_DIR$/SimpleWidgets.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simplewidgets/simplewidgets.iml" filepath="$PROJECT_DIR$/simplewidgets/simplewidgets.iml" />
       <module fileurl="file://$PROJECT_DIR$/simplewidgets/simplewidgets.iml" filepath="$PROJECT_DIR$/simplewidgets/simplewidgets.iml" />
     </modules>
   </component>

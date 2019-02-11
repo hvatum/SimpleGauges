@@ -10,5 +10,10 @@
         <attr name="numTicks" format="integer" />
         <attr name="tickLength" format="integer" />
         <attr name="ticksAtBackgroundColorChange" format="boolean" />
+        <attr name="valueStrokeCaps" format="enum">
+            <enum name="square" value="0"/>
+            <enum name="round" value="1"/>
+            <enum name="butt" value="2"/>
+        </attr>
     </declare-styleable>
 </resources>
