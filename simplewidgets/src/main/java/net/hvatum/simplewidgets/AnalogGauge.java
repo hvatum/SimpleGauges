@@ -68,7 +68,7 @@ public class AnalogGauge extends BaseGauge {
         try {
             setDrawValueText(a.getBoolean(R.styleable.AnalogGauge_showLabel, false));
             setLabelTextSize(a.getInteger(R.styleable.AnalogGauge_labelTextSize, 48));
-            setLabelPostFromBottom(a.getDimension(R.styleable.AnalogGauge_labelPosFromBottom, 48f));
+            setLabelPosFromBottom(a.getDimension(R.styleable.AnalogGauge_labelPosFromBottom, 48f));
             setUnit(a.getString(R.styleable.AnalogGauge_unit));
             setValue(a.getInteger(R.styleable.AnalogGauge_value, 30));
             setMaxValue(a.getInteger(R.styleable.AnalogGauge_maxValue, 100));
@@ -120,7 +120,7 @@ public class AnalogGauge extends BaseGauge {
         this.textSize = textSize;
     }
 
-    public void setLabelPostFromBottom(float labelPos) {
+    public void setLabelPosFromBottom(float labelPos) {
         this.labelPos = labelPos;
     }
 
