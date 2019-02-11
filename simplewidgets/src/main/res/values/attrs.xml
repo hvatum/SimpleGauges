@@ -15,5 +15,6 @@
             <enum name="round" value="1"/>
             <enum name="butt" value="2"/>
         </attr>
+        <attr name="valueColor" format="color" />
     </declare-styleable>
 </resources>

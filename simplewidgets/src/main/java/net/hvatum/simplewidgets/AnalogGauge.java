@@ -40,6 +40,7 @@ public class AnalogGauge extends BaseGauge {
     private int tickLength = 40;
     private List<Pair<Float, Integer>> backgroundColors;
     private boolean drawTicks = true;
+    private int valueColor = Color.blue(204);
 
     private Paint p = new Paint();
     private Paint.Cap strokeCap = Paint.Cap.ROUND;
@@ -47,6 +48,7 @@ public class AnalogGauge extends BaseGauge {
     public static final int SQUARE = 0;
     public static final int ROUND = 1;
     public static final int BUTT = 2;
+
 
     public AnalogGauge(Context context) {
         super(context);
@@ -75,6 +77,7 @@ public class AnalogGauge extends BaseGauge {
             setTickLength(a.getInteger(R.styleable.AnalogGauge_tickLength, 40));
             setTicksAtBackgroundColorChange(a.getBoolean(R.styleable.AnalogGauge_ticksAtBackgroundColorChange, false));
             setValueStrokeCaps(a.getInt(R.styleable.AnalogGauge_valueStrokeCaps, ROUND));
+            setValueColors(a.getColor(R.styleable.AnalogGauge_valueColor, Color.blue(204)));
         } finally {
             a.recycle();
         }
@@ -123,7 +126,7 @@ public class AnalogGauge extends BaseGauge {
 
     private Paint getValuePaint() {
         Paint p = getCommonPaint();
-        p.setColor(Color.blue(204));
+        p.setColor(valueColor);
         p.setStrokeWidth(strokeWidth/1.4f);
         p.setAlpha(190);
         p.setStrokeCap(strokeCap);
@@ -274,6 +277,10 @@ public class AnalogGauge extends BaseGauge {
 
     public void setBackgroundColors(List<Pair<Float, Integer>> backgroundColors) {
         this.backgroundColors = backgroundColors;
+    }
+
+    public void setValueColors(int valueColor) {
+        this.valueColor= valueColor;
     }
 
     @NonNull
