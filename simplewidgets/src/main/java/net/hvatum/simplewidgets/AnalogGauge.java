@@ -279,6 +279,14 @@ public class AnalogGauge extends BaseGauge {
         this.backgroundColors = backgroundColors;
     }
 
+    public void setValueColors(int r, int b, int g) {
+        setValueColors(255, r, b, g);
+    }
+
+    public void setValueColors(int a, int r, int b, int g) {
+        setValueColors(colorFromArgb(a, r, b, g));
+    }
+
     public void setValueColors(int valueColor) {
         this.valueColor= valueColor;
     }

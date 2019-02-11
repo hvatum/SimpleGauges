@@ -15,4 +15,8 @@ abstract class BaseGauge extends android.support.v7.widget.AppCompatImageView {
     public BaseGauge(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
+
+    public int colorFromArgb(int a, int r, int b, int g) {
+            return (a & 0xff) << 24 | (r & 0xff) << 16 | (b & 0xff) << 8 | (g & 0xff);
+    }
 }
