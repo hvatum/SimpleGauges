@@ -48,6 +48,7 @@ public class BarGauge extends BaseGauge {
         p = getValuePaint();
         //canvas.drawLine((float) (centerX + sin * (radius - tickLength)), (float) (centerY - cos * (radius - tickLength)), (float) (centerX + sin * radius), (float) (centerY - cos * radius), getLabelTextPaint());
         canvas.drawLine(bounds.left + margin, bounds.centerY(),bounds.left + (int) ((value / (double) maxValue) * (bounds.right - bounds.left)) - margin, bounds.centerY(), p);
+        p = getTextPaint();
         if (drawText) {
             if (unit != null && !unit.isEmpty()) {
                 canvas.drawText(value + " " + unit, bounds.centerX(), bounds.centerY(), p);
