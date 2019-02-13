@@ -51,9 +51,9 @@ public class BarGauge extends BaseGauge {
         p = getTextPaint();
         if (drawText) {
             if (unit != null && !unit.isEmpty()) {
-                canvas.drawText(value + " " + unit, bounds.centerX(), bounds.centerY(), p);
+                canvas.drawText(value + " " + unit, bounds.centerX(), bounds.centerY()+labelPos, p);
             } else {
-                canvas.drawText(Float.toString(value), bounds.centerX(), bounds.centerY(), p);
+                canvas.drawText(Float.toString(value), bounds.centerX(), bounds.centerY()+labelPos, p);
             }
         }
     }
