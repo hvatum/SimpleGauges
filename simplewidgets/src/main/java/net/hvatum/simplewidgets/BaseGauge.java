@@ -14,7 +14,7 @@ import java.util.List;
  * Created by hvatum on 01.02.19.
  */
 
-abstract class BaseGauge extends android.support.v7.widget.AppCompatImageView {
+public abstract class BaseGauge extends android.support.v7.widget.AppCompatImageView {
 
     protected int numTicks = 6;
     protected int tickLength = 40;
